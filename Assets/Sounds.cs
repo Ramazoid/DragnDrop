@@ -21,7 +21,7 @@ public class Sounds : MonoBehaviour
         
     }
 
-    internal static void Play(string v,float offset)
+    internal static void Play(string v)
     {
         
         AudioClip clip=null;
@@ -35,7 +35,7 @@ public class Sounds : MonoBehaviour
             //IN.Player.Stop();
             IN.Player.clip = clip;
             
-            IN.Player.Play(10);
+            IN.Player.Play();
         }
     }
 }

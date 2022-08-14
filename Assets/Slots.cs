@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -59,7 +58,7 @@ public class Slots : MonoBehaviour
     }
     private void NewObject()
     {
-        Sounds.Play("Appear",1);
+        Sounds.Play("Appear");
 
         int searching = usedObjects.Count;
         objIndex = -1;
@@ -74,8 +73,7 @@ public class Slots : MonoBehaviour
 
         if (searching == 0)
         {
-            //EditorApplication.isPaused = true;
-            print("WIN!!!!!!!!!!!!!!!!!");
+           
             Win = true;
             IEnumerator cor = ShowWin();
             StartCoroutine(cor);
@@ -84,7 +82,6 @@ public class Slots : MonoBehaviour
         {
             if (clone)
             {
-                print("New Object");
                 DragSlot = Instantiate(ObjectSlot.gameObject, ObjectSlot.transform.parent).GetComponent<Transform>();
                 DragSlot.position = DragPosition;
                 ObjectSlot = DragSlot.GetComponent<Image>();
@@ -92,14 +89,12 @@ public class Slots : MonoBehaviour
             if (objIndex == -1)
                 objIndex = Random.Range(0, objects.Count);
 
-
-
             usedObjects[objIndex] = true;
             ObjectSlot.sprite = objects[objIndex];
 
             currentSlot = ObjectSlot.transform;
             currentSlotTargetPosition = currentSlot.localPosition;
-            currentSlot.localPosition -= Vector3.up * 500;
+            currentSlot.localPosition += Vector3.right * 500;
             currentSlot.localScale = Vector3.zero;
             CBack = null;
             mode = 1;
@@ -107,8 +102,6 @@ public class Slots : MonoBehaviour
     }
     private IEnumerator ShowWin()
     {
-        print("ShowWin");
-
 
         while (WinText.alpha <= 1)
         {
@@ -117,7 +110,6 @@ public class Slots : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        print("done");
         yield return null;
     }
     public void StartDRAG(Transform target)
@@ -143,7 +135,7 @@ public class Slots : MonoBehaviour
     private void CheckSlots()
     {
         float distance;
-        bool match = false;
+
         clone = false;
         for (int i = 0; i < slots.Count; i++)
         {
@@ -151,15 +143,15 @@ public class Slots : MonoBehaviour
             if (distance < 10 && i == objIndex)
             {
                 DragSlot.position = slots[i].transform.position;
-                print("Match!!!"); clone = true;
+                 clone = true;
                 
                 NewObject();
-                Sounds.Play("Success", 1);
+                Sounds.Play("Success");
             }
         }
         if (!clone)
         {
-            print("MISS"); Sounds.Play("Whip", 1);
+             Sounds.Play("Whip");
             mode = 3;
         }
     }
@@ -194,7 +186,7 @@ public class Slots : MonoBehaviour
                 currentSlot.localPosition = Vector3.Lerp(currentSlot.localPosition, currentSlotTargetPosition, forwardSpeed);
                 if (Vector2.Distance(currentSlot.localScale, Vector3.one) <= 0.01f)
                 {
-                    mode = 0; Sounds.Play("Appear", 1);
+                    mode = 0; Sounds.Play("Appear");
                     if (CBack != null) CBack();
                 }
                 break;
